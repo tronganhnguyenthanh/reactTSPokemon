@@ -1,0 +1,17 @@
+body{
+ overflow-x:hidden;
+ overflow-y:scroll;
+}
+
+img{
+ width:30%;
+ margin-left:35%;
+}
+
+.text-length{
+  margin-left:6%
+}
+
+h4.text-length{
+  margin-left:6.5%
+}
