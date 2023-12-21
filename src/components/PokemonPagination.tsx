@@ -1,7 +1,6 @@
 import axios from "axios"
 import {useEffect, useState} from "react"
 import Pokemon from "../interface/Pokemon"
-import Pagination from "../interface/Pagination"
 import {Button, Col, Row} from "react-bootstrap"
 import PokemonType from "../interface/PokemonType"
 const PokemonPagination = () => {
@@ -9,7 +8,8 @@ const PokemonPagination = () => {
   const [pokeType, setPokeType] = useState<PokemonType[]>([])
   const [loading, setLoading] = useState(true)
   const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon")
-  const [pagination, setPagination] = useState<Pagination>({next:"", previous:""})
+  const [nextPage, setNextPage] = useState<string | null>(null)
+  const [prevPage, setPrevPage] = useState<string | null>(null)
   useEffect(() => {
    getPokemon()
   },[url])
@@ -19,7 +19,8 @@ const PokemonPagination = () => {
   const getPokemon = async () => {
     setLoading(true)
     const res = await axios.get(url)
-    setPagination(res?.data)
+    setNextPage(res?.data?.next)
+    setPrevPage(res?.data?.prev)
     getPokemonUpdated(res.data.results)
     setLoading(false)
   }
@@ -37,8 +38,12 @@ const PokemonPagination = () => {
     let resType = await axios.get("https://pokeapi.co/api/v2/type/")
     setPokeType(resType?.data?.results)
   }
-  const selectPokemonByTypes = () => {
-    alert("Hello")
+  const handlePrevClick = () => {
+    setUrl(prevPage || "")
+  }
+  
+  const handleNextClick = () => {
+    setUrl(nextPage || "")
   }
   return (
    <div>
@@ -47,7 +52,7 @@ const PokemonPagination = () => {
        <span className="mt-1 ml-2">
         {pokeType?.map((i, index) => {
           return(
-           <Button variant="outline-danger" key={index} className="ml-1 mt-1" onClick={selectPokemonByTypes}>
+           <Button variant="outline-danger" key={index} className="ml-1 mt-1">
              {i?.name}
            </Button>
           )
@@ -72,8 +77,8 @@ const PokemonPagination = () => {
      </Row>
      }
      <div className="d-flex justify-content-center">
-       <Button className="ml-2 btn-danger">Prev</Button>
-       <Button className="ml-2 btn-danger">Next</Button>
+       <Button className="ml-2 btn-danger" onClick={handlePrevClick}>Prev</Button>
+       <Button className="ml-2 btn-danger" onClick={handleNextClick}>Next</Button>
      </div>
    </div>
   )
