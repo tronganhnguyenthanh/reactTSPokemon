@@ -7,7 +7,8 @@ const PokemonPagination = () => {
   const [pokeData, setPokeData] = useState<Pokemon[]>([])
   const [pokeType, setPokeType] = useState<PokemonType[]>([])
   const [loading, setLoading] = useState(true)
-  const [url, setUrl] = useState("https://pokeapi.co/api/v2/pokemon")
+  const limit = 1200
+  const [url, setUrl] = useState(`https://pokeapi.co/api/v2/pokemon?limit=${limit}`)
   const [nextPage, setNextPage] = useState<string | null>(null)
   const [prevPage, setPrevPage] = useState<string | null>(null)
   useEffect(() => {
@@ -45,6 +46,11 @@ const PokemonPagination = () => {
   const handleNextClick = async () => {
     setUrl(nextPage || "")
   }
+
+  const handleFilterByTypes = async (id:number) => {
+    let result = await axios.get("https://pokeapi.co/api/v2/pokemon")
+    console.log(result?.data)
+  }
   return (
    <div>
      <span className="d-flex">
@@ -52,7 +58,7 @@ const PokemonPagination = () => {
        <span className="mt-1 ml-2">
         {pokeType?.map((i, index) => {
           return(
-           <Button variant="outline-danger" key={index} className="ml-1 mt-1">
+           <Button variant="outline-danger" key={index} className="ml-1 mt-1" onClick={() => handleFilterByTypes(i?.id)}>
              {i?.name}
            </Button>
           )
@@ -60,7 +66,7 @@ const PokemonPagination = () => {
          }
        </span>
      </span>
-     <h5 className="p-2 font-weight-bold text-length">{pokeData?.length + " results found."}</h5>
+     <h5 className="p-2 font-weight-bold text-length">{limit + " results found."}</h5>
      {
        loading ? <h1>Loading...</h1> 
        :      
