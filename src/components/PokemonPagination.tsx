@@ -20,7 +20,7 @@ const PokemonPagination = () => {
     setLoading(true)
     const res = await axios.get(url)
     setNextPage(res?.data?.next)
-    setPrevPage(res?.data?.prev)
+    setPrevPage(res?.data?.previous)
     getPokemonUpdated(res.data.results)
     setLoading(false)
   }
@@ -42,7 +42,7 @@ const PokemonPagination = () => {
     setUrl(prevPage || "")
   }
   
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
     setUrl(nextPage || "")
   }
   return (
